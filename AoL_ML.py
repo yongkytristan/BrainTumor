@@ -1,6 +1,8 @@
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
+import numpy as np
+import os
 
 st.set_page_config(
     page_title="Klasifikasi Tumor Otak",
@@ -19,26 +21,25 @@ model_path = 'best.pt'
 
 @st.cache_resource
 def load_yolov8_model(path):
-    """Memuat model YOLOv8 dari path yang diberikan."""
+    """Memuat model YOLOv8 dari jalur yang diberikan."""
     try:
         model = YOLO(path)
         return model
     except Exception as e:
         st.error(f"Gagal memuat model: {e}")
-        st.info("Pastikan file model ada di path yang benar.")
+        st.info("Pastikan file 'best.pt' ada di jalur yang benar.")
         return None
 
 model = load_yolov8_model(model_path)
-class_names = ['glioma', 'meningioma', 'notumor', 'pituitary'] 
+class_names = ['glioma', 'meningioma', 'notumor', 'pituitary']
 
 if model:
     st.success("Model YOLOv8 berhasil dimuat!")
 else:
-    st.warning("Model tidak dapat dimuat. Silakan periksa model kembali!")
+    st.warning("Model tidak dapat dimuat. Silakan periksa jalur model dan pastikan pelatihan telah selesai.")
 
 st.header("Pilih Sumber Gambar")
 
-# Inisialisasi session state untuk melacak pilihan pengguna
 if 'input_mode' not in st.session_state:
     st.session_state.input_mode = None
 
@@ -70,7 +71,7 @@ else:
     st.info("Silakan pilih apakah Anda ingin mengambil gambar dari kamera atau mengunggah file.")
 
 if image_to_predict is not None:
-    st.image(image_to_predict, caption=display_caption, use_column_width=True)
+    st.image(image_to_predict, caption=display_caption, use_container_width=True)
     st.write("")
     st.write("Gambar siap untuk diprediksi...")
 
@@ -91,7 +92,6 @@ if image_to_predict is not None:
                         st.success(f"**Kelas Prediksi:** {predicted_class_name}")
                         st.info(f"**Tingkat Kepercayaan:** {confidence:.4f}")
 
-                        # Tampilkan semua probabilitas (opsional)
                         st.subheader("Probabilitas untuk Setiap Kelas:")
                         prob_dict = {class_names[i]: probs.data[i].item() for i in range(len(class_names))}
                         st.write(prob_dict)
@@ -106,7 +106,7 @@ if image_to_predict is not None:
         else:
             st.warning("Model belum dimuat. Tidak dapat melakukan prediksi.")
 else:
-    if st.session_state.input_mode is not None: # Hanya tampilkan ini jika sudah memilih mode tapi belum ada gambar
+    if st.session_state.input_mode is not None:
         st.info("Unggah gambar atau ambil dari kamera untuk memulai prediksi.")
 
 st.markdown("---")
