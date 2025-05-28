@@ -1,8 +1,6 @@
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
-import numpy as np
-import os
 
 st.set_page_config(
     page_title="Klasifikasi Tumor Otak",
@@ -21,13 +19,13 @@ model_path = 'best.pt'
 
 @st.cache_resource
 def load_yolov8_model(path):
-    """Memuat model YOLOv8 dari jalur yang diberikan."""
+    """Memuat model YOLOv8 dari path yang diberikan."""
     try:
         model = YOLO(path)
         return model
     except Exception as e:
         st.error(f"Gagal memuat model: {e}")
-        st.info("Pastikan file 'best.pt' ada di jalur yang benar.")
+        st.info("Pastikan file model ada di path yang benar.")
         return None
 
 model = load_yolov8_model(model_path)
@@ -36,7 +34,7 @@ class_names = ['glioma', 'meningioma', 'notumor', 'pituitary']
 if model:
     st.success("Model YOLOv8 berhasil dimuat!")
 else:
-    st.warning("Model tidak dapat dimuat. Silakan periksa jalur model dan pastikan pelatihan telah selesai.")
+    st.warning("Model tidak dapat dimuat. Silakan pilih model kembali!")
 
 st.header("Pilih Sumber Gambar")
 
