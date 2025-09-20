@@ -1,2 +1,4 @@
 # BrainTumor
-AoL Project Machine Learning, Classification Brain Tumor
+This was the final project for the Machine Learning course, where we were required to build a program using either regression or classification models. For our project, we developed a classification system for brain tumor detection based on an MRI dataset from Kaggle, utilizing YOLO (You Only Look Once) for image classification and computer vision tasks.
+We chose YOLO because of its low error rate and pretrained architecture, which made it effective and efficient for medical image classification. My role in this project was to implement the YOLO model for tumor detection and to develop the web application using Streamlit, providing a simple interface for users to upload MRI images and view the classification results.
+Through this project, I gained hands-on experience in computer vision, deep learning model implementation, and web-based AI deployment.
